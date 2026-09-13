@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class FireSpawner : MonoBehaviour
 {
@@ -28,6 +27,13 @@ public class FireSpawner : MonoBehaviour
     public KeyCode j = KeyCode.J;
     private float firerate = 0.2f;
     private float timer = 0f;
+
+    void Start()
+    {
+        ObjectPool.Prewarm(dragonfirePrefab, 20);
+        ObjectPool.Prewarm(purplefire, 8);
+        ObjectPool.Prewarm(dragonbreath, 12);
+    }
 
     void Update()
     {
@@ -61,54 +67,54 @@ public class FireSpawner : MonoBehaviour
 
     void SpawnFire(GameObject prefab) 
     {
-        
-            // 计算生成位置
-           
-            Vector3 spawnPos = player.transform.position + new Vector3(spawnOffsetX, spawnOffsetY, 0);
-            GameObject fire = Instantiate(prefab, spawnPos, Quaternion.identity);
+        if (player == null || prefab == null)
+            return;
 
+        Vector3 spawnPos = player.transform.position + new Vector3(spawnOffsetX, spawnOffsetY, 0);
+        GameObject fire = ObjectPool.Get(prefab, spawnPos, Quaternion.identity);
 
         if (prefab == dragonbreath)
         {
             Quaternion rotation = Quaternion.Euler(0, 0, 45);
             Quaternion rotation1 = Quaternion.Euler(0, 0, -45);
-            GameObject fire1 = Instantiate(prefab, spawnPos, rotation);
-            GameObject fire2 = Instantiate(prefab, spawnPos, rotation1);
-            fire1.AddComponent<FireCollisionHandler>();
-            fire2.AddComponent<FireCollisionHandler>();
-            float angle = 45f; // 旋转角度
+            GameObject fire1 = ObjectPool.Get(prefab, spawnPos, rotation);
+            GameObject fire2 = ObjectPool.Get(prefab, spawnPos, rotation1);
+            EnsureFireCollision(fire1);
+            EnsureFireCollision(fire2);
+            float angle = 45f;
             float angle1 = -45f;
             Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
             Vector2 direction1 = new Vector2(Mathf.Cos(angle1 * Mathf.Deg2Rad), Mathf.Sin(angle1 * Mathf.Deg2Rad)).normalized;
-            fire1.GetComponent<Rigidbody2D>().velocity = direction * fireSpeed;
-            fire2.GetComponent<Rigidbody2D>().velocity = direction1 * fireSpeed;
-            StartCoroutine(DestroyAfterDistance(fire1));
-            StartCoroutine(DestroyAfterDistance(fire2));
-            }
-        
-        // 关键修改：只给特定预制体添加碰撞处理组件
-            if (prefab != purplefire) // 紫火不添加碰撞脚本
-            {
-                fire.AddComponent<FireCollisionHandler>();
-            }
-        
-        // 设置移动速度
-        Rigidbody2D rb = fire.GetComponent<Rigidbody2D>();
-        rb.velocity = new Vector2(fireSpeed, 0);
-        
-        // 启动自动销毁协程
-        StartCoroutine(DestroyAfterDistance(fire));
+            LaunchFire(fire1, direction);
+            LaunchFire(fire2, direction1);
+        }
+
+        if (prefab != purplefire)
+            EnsureFireCollision(fire);
+
+        LaunchFire(fire, Vector2.right);
     }
 
-    IEnumerator DestroyAfterDistance(GameObject fire) 
+    void EnsureFireCollision(GameObject fire)
     {
-        while (fire != null && fire.transform.position.x < destroyX) 
+        if (fire != null && fire.GetComponent<FireCollisionHandler>() == null)
+            fire.AddComponent<FireCollisionHandler>();
+    }
+
+    void LaunchFire(GameObject fire, Vector2 direction)
+    {
+        if (fire == null)
+            return;
+
+        Projectile projectile = fire.GetComponent<Projectile>();
+        if (projectile != null)
         {
-            yield return null;
+            projectile.Launch(direction);
+            return;
         }
-        if (fire != null) 
-        {
-            Destroy(fire);
-        }
+
+        Rigidbody2D rb = fire.GetComponent<Rigidbody2D>();
+        if (rb != null)
+            rb.velocity = direction.normalized * fireSpeed;
     }
 }

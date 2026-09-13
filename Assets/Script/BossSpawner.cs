@@ -6,6 +6,7 @@ public class BossSpawner : MonoBehaviour
     public GameObject boss;          // Nian预设体
     public int spawnLevel = 10;      // 生成Boss的等级
     public int activationCode = 1;   // 激活码（用于条件判断）
+    [SerializeField] private GameObject HpBar;
 
     private int currentActivationCode = 1; // 当前激活码状态
     private bool bossSpawned = false;      // Boss是否已生成
@@ -21,12 +22,11 @@ public class BossSpawner : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 生成Boss并配置移动参数
-    /// </summary>
     private void SpawnBoss()
     {
-        // 更新状态防止重复生成
+        if(HpBar!=null){
+            HpBar.SetActive(true);
+        }
         bossSpawned = true;
         currentActivationCode = 2; // 更新激活码状态
 
@@ -45,7 +45,7 @@ public class BossSpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Nian对象缺少NianMovement组件！");
+            //Debug.LogError("Nian对象缺少NianMovement组件！");
         }
     }
 

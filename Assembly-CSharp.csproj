@@ -64,20 +64,22 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.53f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Script/abilitymanager.cs" />
     <Compile Include="Assets/Script/SceneLoader.cs" />
     <Compile Include="Assets/Script/ScrollingBackground.cs" />
+    <Compile Include="Assets/Script/OrbitBalls.cs" />
     <Compile Include="Assets/Script/movementscript.cs" />
     <Compile Include="Assets/Script/Prafabscript.cs" />
     <Compile Include="Assets/Script/ScoreManager.cs" />
     <Compile Include="Assets/Script/PlayerHealth.cs" />
     <Compile Include="Assets/Script/EnemyShooting.cs" />
     <Compile Include="Assets/Script/FireSpawner.cs" />
+    <Compile Include="Assets/Script/Abilitymanager.cs" />
     <Compile Include="Assets/Script/FireCollisionHandler.cs" />
     <Compile Include="Assets/Script/EnemyController.cs" />
     <Compile Include="Assets/Script/LevelUpButton.cs" />
     <Compile Include="Assets/Script/CameraFit1611.cs" />
     <Compile Include="Assets/Script/ButtonSpawner.cs" />
+    <Compile Include="Assets/Script/RestartGame.cs" />
     <Compile Include="Assets/Script/AudioManager.cs" />
     <Compile Include="Assets/Script/AbilityIconGenerator.cs" />
     <Compile Include="Assets/Script/ShieldCreate.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Assets/Script/Myscript.cs" />
     <Compile Include="Assets/Script/Enemyfirecontrol.cs" />
     <Compile Include="Assets/Script/BossSpawner.cs" />
+    <Compile Include="Assets/Script/Projectile.cs" />
     <Compile Include="Assets/Script/NianMovement.cs" />
   </ItemGroup>
   <ItemGroup>

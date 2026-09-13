@@ -8,7 +8,7 @@ public class PlayerHealth : MonoBehaviour
     private int currentHeartIndex;
 
     [Header("游戏失败设置")]
-    public string gameOverSceneName = "游戏失败场景";
+    //游戏失败场景id为 2
     public float gameOverDelay = 1.5f;
 
     [Header("能力判定")]
@@ -93,21 +93,14 @@ public class PlayerHealth : MonoBehaviour
         }
 
         Time.timeScale = 1f;
-
-        if (Application.CanStreamedLevelBeLoaded(gameOverSceneName))
-        {
-            SceneManager.LoadScene(gameOverSceneName);
-        }
-        else
-        {
-            Debug.LogError($"无法加载场景: {gameOverSceneName}");
-        }
+        SceneManager.LoadScene(2);
+        
     }
     public void RestoreHeart()
     {
         if (AbilityManager.Instance.IsAbilityAcquired(0))
         {
-            Debug.Log("触发吸血");
+            //Debug.Log("触发吸血");
             int mylife = 3;
             if (AbilityManager.Instance.IsAbilityAcquired(5))
             {

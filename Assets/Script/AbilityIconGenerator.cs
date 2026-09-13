@@ -41,7 +41,7 @@ public class AbilityIconGenerator : MonoBehaviour
     {
         if (abilityIconPrefab == null)
         {
-            Debug.LogError("错误：未设置能力图标预制体！");
+            //Debug.LogError("错误：未设置能力图标预制体！");
             return;
         }
 

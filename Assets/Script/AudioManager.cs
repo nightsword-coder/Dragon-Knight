@@ -78,7 +78,7 @@ public class AudioManager : MonoBehaviour
             // 强制保持BGM或BGM名称相同
             if (matchedConfig.forceKeepBGM || matchedConfig.bgmName == currentBGMName)
             {
-                Debug.Log($"场景 {sceneName} 保持BGM: {matchedConfig.bgmName}");
+                //Debug.Log($"场景 {sceneName} 保持BGM: {matchedConfig.bgmName}");
                 isBGMKept = true;
                 ResumeBGM(); // 恢复播放
                 return;
@@ -94,20 +94,20 @@ public class AudioManager : MonoBehaviour
             currentSceneName = sceneName;
             currentBGMName = matchedConfig.bgmName;
             isBGMKept = false;
-            Debug.Log($"场景 {sceneName} 播放新BGM: {matchedConfig.bgmName}");
+            //Debug.Log($"场景 {sceneName} 播放新BGM: {matchedConfig.bgmName}");
             return;
         }
         
         // 场景无BGM配置：保持上一场景BGM
         if (!string.IsNullOrEmpty(currentBGMName))
         {
-            Debug.Log($"场景 {sceneName} 无BGM配置，保持上一场景BGM: {currentBGMName}");
+            //Debug.Log($"场景 {sceneName} 无BGM配置，保持上一场景BGM: {currentBGMName}");
             isBGMKept = true;
             ResumeBGM();
         }
         else
         {
-            Debug.LogWarning($"场景 {sceneName} 无BGM配置，且上一场景也无BGM");
+            //Debug.LogWarning($"场景 {sceneName} 无BGM配置，且上一场景也无BGM");
             StopBGM();
         }
     }

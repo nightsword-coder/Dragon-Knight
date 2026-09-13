@@ -26,6 +26,11 @@ public class EnemyShooting : MonoBehaviour
 
     private float timer = 1.5f;
 
+    void OnEnable()
+    {
+        timer = fireRate;
+    }
+
     void Start()
     {
         // 确保角度数组和偏移数组长度一致
@@ -78,17 +83,18 @@ public class EnemyShooting : MonoBehaviour
             // 计算方向向量
             Vector2 direction = Quaternion.Euler(0, 0, finalAngle) * Vector2.right;
             
-            // 生成子弹
-            GameObject bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity);
-            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
-            
-            if (bulletRb != null)
+            GameObject bullet = ObjectPool.Get(bulletPrefab, spawnPosition, Quaternion.Euler(0, 0, finalAngle));
+            Projectile projectile = bullet.GetComponent<Projectile>();
+            if (projectile != null)
             {
-                bulletRb.velocity = direction * bulletSpeed;
+                projectile.Launch(direction);
             }
-
-            // 旋转子弹使其朝向运动方向
-            bullet.transform.rotation = Quaternion.Euler(0, 0, finalAngle);
+            else
+            {
+                Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+                if (bulletRb != null)
+                    bulletRb.velocity = direction * bulletSpeed;
+            }
         }
     }
 }

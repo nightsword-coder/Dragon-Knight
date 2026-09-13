@@ -8,7 +8,7 @@ public class Enemyfirecontrol : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Destroy(gameObject);
+            ObjectPool.Release(gameObject);
             
             // 检查护盾能力和数量
             if (ShieldCreate.Instance != null && 

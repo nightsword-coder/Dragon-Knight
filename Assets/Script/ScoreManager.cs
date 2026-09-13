@@ -16,12 +16,11 @@ public class ScoreManager : MonoBehaviour
     [Tooltip("Target score to achieve victory")]
     public int targetScore;
     public double Level = 1;
-    public string victorySceneName = "VictoryScene";
     public float sceneLoadDelay = 2f;
 
-    private int currentScore = 0;
+    public int currentScore = 0;
     private bool isVictoryAchieved = false;
-    public static int currentSceneIndex;
+    public static int currentSceneIndex=4;
 
     private void Awake()
     {
@@ -148,20 +147,7 @@ public class ScoreManager : MonoBehaviour
         }
 
         //Time.timeScale = 1f;
-        LoadSceneSafely(victorySceneName);
-    }
-
-    private void LoadSceneSafely(string sceneName)
-    {
-        if (SceneExists(sceneName))
-        {
-            SceneManager.LoadScene(sceneName);
-        }
-        else
-        {
-            Debug.LogError($"Scene not found: {sceneName}");
-            DebugAvailableScenes();
-        }
+         SceneManager.LoadScene(3);
     }
 
     private bool SceneExists(string sceneName)
@@ -171,7 +157,6 @@ public class ScoreManager : MonoBehaviour
 
     private void DebugAvailableScenes()
     {
-        Debug.Log("Available Scenes:");
         for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
         {
             Debug.Log(SceneUtility.GetScenePathByBuildIndex(i));

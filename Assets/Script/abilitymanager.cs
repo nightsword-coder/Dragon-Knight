@@ -56,7 +56,7 @@ public class AbilityManager : MonoBehaviour
         }
         if (tempSelectedAbility == -1)
             {
-                Debug.Log("未选择任何能力，直接进入下一关");
+                //Debug.Log("未选择任何能力，直接进入下一关");
                 AbilityConfirmed?.Invoke(-1);
                 return;
             }
@@ -117,17 +117,17 @@ public class AbilityManager : MonoBehaviour
     public void ClearRoundDisplayedAbilities()
     {
         displayedAbilitiesThisRound.Clear();
-        Debug.Log("清空本轮已显示的能力");
+        //Debug.Log("清空本轮已显示的能力");
     }
 
     // 准备进入下一关
     public void LevelUp()
     {
-        Debug.Log($"LevelUp调用 - 临时选择能力: {tempSelectedAbility}");
+        //Debug.Log($"LevelUp调用 - 临时选择能力: {tempSelectedAbility}");
         ConfirmSelectedAbility();
         tempSelectedAbility = -1;
         abilityConfirmedThisLevel = false;
-        Debug.Log("准备加载场景...");
+        //Debug.Log("准备加载场景...");
         ScoreManager.Instance.ResetGameState();
         int currentSceneIndex = ScoreManager.returnIndex();
         UnityEngine.SceneManagement.SceneManager.LoadScene(currentSceneIndex);

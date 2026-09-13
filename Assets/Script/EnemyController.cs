@@ -4,36 +4,74 @@ public class EnemyController : MonoBehaviour
 {
     [Header("碰撞设置")]
     public string playerTag = "Player";
-    public int maxHits = 3;
+    public int maxHealth = 300;
+    public int scoreValue = 100;
+    public float speedMultiplier = 1f;
 
     private EnemySpawner spawner;
-    private float speed;
+    public float speed;
     private float minX, maxX, minY, maxY;
-    private int hitCount = 0;
+    private int currentHealth;
     private bool hasHitPlayer = false; // 防止同一碰撞多次调用
+
+    private bool snakeMove;
+    private float snakeAmplitude = 1.5f;
+    private float snakeFrequency = 2.5f;
+    private float snakePhase;
+    private float snakeTime;
+    private float centerY;
+
+    private bool isDead;
+
+    void Awake()
+    {
+        currentHealth = maxHealth;
+    }
 
     public void Initialize(EnemySpawner spawnerRef, float enemySpeed, 
                          float destroyMinX, float destroyMaxX, 
                          float destroyMinY, float destroyMaxY)
     {
         spawner = spawnerRef;
-        speed = enemySpeed;
+        speed = enemySpeed * speedMultiplier;
         minX = destroyMinX;
         maxX = destroyMaxX;
         minY = destroyMinY;
         maxY = destroyMaxY;
+        centerY = transform.position.y;
+        currentHealth = maxHealth;
+        hasHitPlayer = false;
+        isDead = false;
+        snakeMove = false;
+        snakeTime = 0f;
+    }
+
+    public void EnableSnakeMove(float phase, float amplitude, float frequency)
+    {
+        snakeMove = true;
+        snakePhase = phase;
+        snakeAmplitude = amplitude;
+        snakeFrequency = frequency;
+        snakeTime = 0f;
+        centerY = transform.position.y;
     }
 
     void Update()
     {
-        transform.Translate(Vector2.right * speed * Time.deltaTime);
+        Vector3 pos = transform.position;
+        pos.x += speed * Time.deltaTime;
 
-        // 边界检查
-        Vector2 pos = transform.position;
-        if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
+        if (snakeMove)
         {
-            DestroyEnemy();
+            snakeTime += Time.deltaTime;
+            pos.y = centerY + Mathf.Sin(snakeTime * snakeFrequency + snakePhase) * snakeAmplitude;
+            pos.y = Mathf.Clamp(pos.y, minY + 0.3f, maxY - 0.3f);
         }
+
+        transform.position = pos;
+
+        if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
+            DestroyEnemy();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -51,14 +89,6 @@ public class EnemyController : MonoBehaviour
         }
         DestroyEnemy();
         return;
-    }
-
-    hitCount++;
-    if (hitCount >= maxHits)
-    {
-        // 敌人被完全击败，增加分数
-        ScoreManager.Instance?.AddScore(100);
-        DestroyEnemy();
     }
 }
 
@@ -84,12 +114,28 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int amount)
+    {
+        if (isDead || currentHealth <= 0)
+            return;
+
+        currentHealth -= amount;
+        if (currentHealth <= 0)
+        {
+            ScoreManager.Instance?.AddScore(scoreValue);
+            DestroyEnemy();
+        }
+    }
+
     void DestroyEnemy()
     {
+        if (isDead)
+            return;
+
+        isDead = true;
         if (spawner != null)
-        {
             spawner.OnEnemyDestroyed();
-        }
-        Destroy(gameObject);
+
+        ObjectPool.Release(gameObject);
     }
 }
