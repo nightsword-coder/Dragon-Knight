@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Script/SceneLoader.cs" />
+    <Compile Include="Assets/Script/BossFsm.cs" />
     <Compile Include="Assets/Script/ScrollingBackground.cs" />
     <Compile Include="Assets/Script/OrbitBalls.cs" />
     <Compile Include="Assets/Script/movementscript.cs" />
@@ -84,11 +85,13 @@
     <Compile Include="Assets/Script/AbilityIconGenerator.cs" />
     <Compile Include="Assets/Script/ShieldCreate.cs" />
     <Compile Include="Assets/Script/EnemySpawner.cs" />
+    <Compile Include="Assets/Script/ObjectPool.cs" />
     <Compile Include="Assets/Script/Buttonmanagement.cs" />
     <Compile Include="Assets/Script/Myscript.cs" />
     <Compile Include="Assets/Script/Enemyfirecontrol.cs" />
     <Compile Include="Assets/Script/BossSpawner.cs" />
     <Compile Include="Assets/Script/Projectile.cs" />
+    <Compile Include="Assets/Script/PooledObject.cs" />
     <Compile Include="Assets/Script/NianMovement.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,32 @@ public class EnemyShooting : MonoBehaviour
 
     private float timer = 1.5f;
 
+    public void SetFanPattern(float fromAngle, float toAngle, float step, float newFireRate)
+    {
+        if (step < 0.01f)
+            step = 20f;
+        if (toAngle < fromAngle)
+        {
+            float swap = fromAngle;
+            fromAngle = toAngle;
+            toAngle = swap;
+        }
+
+        int count = 0;
+        for (float angle = fromAngle; angle <= toAngle + 0.001f; angle += step)
+            count++;
+        if (count <= 0)
+            count = 1;
+
+        bulletAngles = new float[count];
+        localOffsets = new Vector2[count];
+        int index = 0;
+        for (float angle = fromAngle; angle <= toAngle + 0.001f && index < count; angle += step)
+            bulletAngles[index++] = angle;
+
+        fireRate = Mathf.Max(0.05f, newFireRate);
+    }
+
     void OnEnable()
     {
         timer = fireRate;

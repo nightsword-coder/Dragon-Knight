@@ -21,6 +21,9 @@ public class NianMovement : MonoBehaviour
     public int BossHealth;
     public GameObject BossFire;
 
+    public event System.Action HealthChanged;
+    public float HealthNormalized => MaxBossHealth <= 0 ? 0f : (float)BossHealth / MaxBossHealth;
+
     private Image fillImage;
 
     void Start()
@@ -70,35 +73,55 @@ public class NianMovement : MonoBehaviour
         return Mathf.Abs(transform.position.y - targetY) < 0.1f;
     }
 
+    public void HealByPercent(float percent)
+    {
+        if (BossHealth <= 0 || percent <= 0f)
+            return;
+
+        int amount = Mathf.Max(1, Mathf.RoundToInt(MaxBossHealth * percent));
+        int next = Mathf.Clamp(BossHealth + amount, 0, MaxBossHealth);
+        if (next == BossHealth)
+            return;
+
+        BossHealth = next;
+        UpdateHealthBar();
+        HealthChanged?.Invoke();
+    }
+
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag(projectileTag))
+        if (!collision.CompareTag(projectileTag))
+            return;
+
+        ApplyDamage(ResolveProjectileDamage(collision.gameObject));
+        ObjectPool.Release(collision.gameObject);
+
+        if (BossHealth <= 0)
         {
-            if (collision.name == "dragonfire(Clone)")
-            {
-                BossHealth -= 100;
-            }
-            else if (collision.name == "紫火炮弹图片(Clone)")
-            {
-                BossHealth -= 300;
-            }
-            else if (collision.name == "巨焰龙息炮弹(Clone)")
-            {
-                BossHealth -= 300;
-            }
-
-            BossHealth = Mathf.Clamp(BossHealth, 0, MaxBossHealth);
-            Debug.Log("Boss血量：" + BossHealth);
-            UpdateHealthBar();
-
-            if (BossHealth <= 0)
-            {
-                Destroy(gameObject);
-                SceneManager.LoadScene(7);
-            }
-            Debug.Log(collision.name);
-            ObjectPool.Release(collision.gameObject);
+            Destroy(gameObject);
+            SceneManager.LoadScene(7);
         }
+    }
+
+    int ResolveProjectileDamage(GameObject projectile)
+    {
+        Projectile projectileDamage = projectile.GetComponent<Projectile>();
+        if (projectileDamage != null)
+            return projectileDamage.damage;
+
+        if (projectile.name == "紫火炮弹图片(Clone)" || projectile.name == "巨焰龙息炮弹(Clone)")
+            return 300;
+        return 100;
+    }
+
+    void ApplyDamage(int amount)
+    {
+        if (amount <= 0 || BossHealth <= 0)
+            return;
+
+        BossHealth = Mathf.Clamp(BossHealth - amount, 0, MaxBossHealth);
+        UpdateHealthBar();
+        HealthChanged?.Invoke();
     }
 
     void UpdateHealthBar()

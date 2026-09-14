@@ -989,9 +989,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 769935431359408651, guid: eb93f9660f68e4d2f8529dc6e9168e31, type: 3}
+  - {fileID: 340340229525243385, guid: 83f5fa2f1514f454ba6294a3a156ee11, type: 3}
+  - {fileID: 1700365767138091212, guid: e02c7296c82d949bf81091bb9ff62c66, type: 3}
   boss: {fileID: 8896970358957333229, guid: ea87d1e152cdc4de2b69edae03e0203f, type: 3}
   spawnInterval: 1
   maxEnemies: 5

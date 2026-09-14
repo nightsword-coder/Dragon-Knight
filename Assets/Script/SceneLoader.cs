@@ -16,5 +16,7 @@ public class SceneLoader : MonoBehaviour
     public void LoadSceneByIndex(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
+        if (sceneIndex == 4 && ScoreManager.Instance != null)
+            ScoreManager.Instance.TryAgainGameState();
     }
 }

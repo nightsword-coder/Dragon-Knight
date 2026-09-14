@@ -14,6 +14,7 @@ public class PlayerHealth : MonoBehaviour
     [Header("能力判定")]
     public int requiredAbilityId = 5; // 能力ID=5（血量）
     public static PlayerHealth Instance;
+    public static event System.Action Damaged;
     void Awake()
     {
         // 单例初始化
@@ -62,6 +63,7 @@ public class PlayerHealth : MonoBehaviour
                 break;
             }
         }
+        bool lostHeart = false;
         if (currentHeartIndex >= 0)
         {
             if (hearts[currentHeartIndex] != null)
@@ -69,7 +71,11 @@ public class PlayerHealth : MonoBehaviour
                 Destroy(hearts[currentHeartIndex]);
             }
             currentHeartIndex--;
+            lostHeart = true;
         }
+
+        if (lostHeart)
+            Damaged?.Invoke();
 
         if (currentHeartIndex < 0)
         {

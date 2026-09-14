@@ -315,6 +315,95 @@ public class EnemySpawner : MonoBehaviour
         currentEnemies++;
     }
 
+    public static EnemySpawner FindPrimary()
+    {
+        EnemySpawner[] spawners = FindObjectsOfType<EnemySpawner>();
+        EnemySpawner best = null;
+        int bestCount = -1;
+        for (int i = 0; i < spawners.Length; i++)
+        {
+            int count = spawners[i].CountValidPrefabs();
+            if (count > bestCount)
+            {
+                bestCount = count;
+                best = spawners[i];
+            }
+        }
+        return best;
+    }
+
+    public int CountValidPrefabs()
+    {
+        if (enemyPrefab == null)
+            return 0;
+
+        int count = 0;
+        for (int i = 0; i < enemyPrefab.Count; i++)
+        {
+            if (enemyPrefab[i] != null)
+                count++;
+        }
+        return count;
+    }
+
+    public void SpawnRandomMinion()
+    {
+        GameObject prefab = PickAnyValidPrefab();
+        if (prefab == null)
+            return;
+
+        RefreshLevelParams();
+        SpawnOne(prefab, GetRandomPosition(), null, 0);
+    }
+
+    public void SpawnLateEnemies(int count)
+    {
+        if (count <= 0)
+            return;
+
+        RefreshLevelParams();
+        for (int i = 0; i < count; i++)
+        {
+            GameObject prefab = PickLatePrefab();
+            if (prefab == null)
+                return;
+
+            SpawnOne(prefab, GetColumnPosition(i, count, 1.1f), null, i);
+        }
+    }
+
+    GameObject PickAnyValidPrefab()
+    {
+        List<GameObject> valid = CollectValidPrefabs();
+        if (valid.Count == 0)
+            return null;
+        return valid[Random.Range(0, valid.Count)];
+    }
+
+    GameObject PickLatePrefab()
+    {
+        List<GameObject> valid = CollectValidPrefabs();
+        if (valid.Count == 0)
+            return null;
+
+        int from = Mathf.Max(0, valid.Count / 2);
+        return valid[Random.Range(from, valid.Count)];
+    }
+
+    List<GameObject> CollectValidPrefabs()
+    {
+        List<GameObject> valid = new List<GameObject>();
+        if (enemyPrefab == null)
+            return valid;
+
+        for (int i = 0; i < enemyPrefab.Count; i++)
+        {
+            if (enemyPrefab[i] != null)
+                valid.Add(enemyPrefab[i]);
+        }
+        return valid;
+    }
+
     public void OnEnemyDestroyed()
     {
         currentEnemies--;

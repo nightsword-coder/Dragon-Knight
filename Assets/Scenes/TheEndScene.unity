@@ -525,12 +525,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 920178042}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadSceneByName
-        m_Mode: 5
+        m_MethodName: LoadSceneByIndex
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: "\u5173\u5361\u9009\u62E9\u573A\u666F"
           m_BoolArgument: 0
